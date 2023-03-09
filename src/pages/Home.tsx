@@ -1,48 +1,87 @@
-import { Center, Text, Button } from 'native-base'
-import { useState } from 'react'
+import { Center, Text, Button, HStack } from 'native-base'
+import { Alert } from 'react-native'
+import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 import api from '../services/api'
 import firestore from '@react-native-firebase/firestore'
 
 import { Card } from '../components/Card'
+import { Input } from '../components/Input'
+import { Separator } from '../components/Separator'
+
+import { MovieProps } from '../components/Card'
 
 export function Home() {
   const [movies, setMovies] = useState([])
-  const [input, setInput] = useState('')
+  const [search, setSearch] = useState('')
+  const [favorite, setFavorite] = useState(true)
 
   async function handleFindMovies() {
-    const response = await api.get('Avatar')
+    if (search === '') return Alert.alert('Digite o nome do filme desejado')
+    const response = await api.get(`${search}`)
     const data = await response.data
 
     setMovies(data.results)
   }
 
-  async function handleAddMovie() {
+  async function handleAddMovie(movieData: MovieProps) {
     firestore()
       .collection('favoritos')
-      .add({ title: 'aa' })
-      .then(() => {
-        console.log('Filme adicionado com sucesso')
+      .doc(`${movieData.id}`)
+      .get()
+      .then(response => {
+        if (!response.exists) {
+          firestore()
+            .collection('favoritos')
+            .doc(`${movieData.id}`)
+            .set({
+              backdrop_path: `${movieData.backdrop_path}`,
+              overview: `${movieData.overview}`,
+              poster_path: `${movieData.poster_path}`,
+              title: `${movieData.title}`,
+              favorite
+            })
+            .then(() =>
+              Alert.alert('Filme adicionado aos favoritos com sucesso!')
+            )
+            .catch(error => console.error('Erro: ', error))
+        } else Alert.alert('Esse filme já está cadastrado nos favoritos')
       })
-      .catch(error => console.error(error))
+      .catch(error => console.error('Erro : ', error))
   }
+
+  useEffect(() => {
+    api
+      .get(`${search}`)
+      .then(response => response.data)
+      .then(data => setMovies(data.results))
+  }, [movies])
 
   return (
     <Center flex={1} backgroundColor="gray.700">
       <Text color="white" fontSize="2xl">
         Find Movies
       </Text>
-      <Button marginTop="41px" onPress={handleFindMovies}>
-        <Text>Pesquisar filmes</Text>
-      </Button>
+      <HStack space={1}>
+        <Input onChangeText={setSearch} />
+        <Button
+          onPress={handleFindMovies}
+          h={14}
+          bgColor="green.500"
+          fontFamily="body"
+        >
+          <Text color="white">Pesquisar</Text>
+        </Button>
+      </HStack>
 
       <FlatList
         data={movies}
         showsVerticalScrollIndicator={false}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <Card title={item.title} onPress={handleAddMovie} />
+          <Card movieProps={item} pressFavorite={() => handleAddMovie(item)} />
         )}
+        ItemSeparatorComponent={() => <Separator />}
       />
     </Center>
   )
