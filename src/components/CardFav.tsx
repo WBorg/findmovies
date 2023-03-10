@@ -1,5 +1,3 @@
-/*888888888888888888888888888888888888888888888888888888888888888888888888888*/
-
 import {
   Box,
   Button,
@@ -10,7 +8,7 @@ import {
   Text,
   VStack
 } from 'native-base'
-import { AntDesign } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 export type MovieProps = {
   id: string
@@ -22,10 +20,10 @@ export type MovieProps = {
 
 type Props = {
   movieProps: MovieProps
-  pressFavorite: () => void
+  onPressDelete: () => void
 }
 
-export function Card({ movieProps, pressFavorite }: Props) {
+export function CardFav({ movieProps, onPressDelete }: Props) {
   return (
     <Box flexDirection="row" padding="4px">
       <Box>
@@ -40,17 +38,8 @@ export function Card({ movieProps, pressFavorite }: Props) {
           alt="Capa do filme"
         />
         <Box flexDirection="row" justifyContent="center" my={1}>
-          <Button
-            w="100px"
-            onPress={pressFavorite}
-            bg="transparent"
-            borderWidth={2}
-            borderColor="yellow.600"
-            _pressed={{ backgroundColor: 'green.500' }}
-          >
-            <Text color="white" fontSize="14px" fontFamily="body">
-              Favoritar
-            </Text>
+          <Button bg="transparent" onPress={onPressDelete}>
+            <MaterialIcons name="delete" size={32} color="red" />
           </Button>
         </Box>
       </Box>

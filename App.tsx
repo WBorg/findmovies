@@ -1,5 +1,6 @@
-import { StatusBar } from 'react-native'
 import { NativeBaseProvider } from 'native-base'
+import { NavigationContainer } from '@react-navigation/native'
+
 import {
   useFonts,
   Roboto_400Regular,
@@ -8,19 +9,15 @@ import {
 
 import { THEME } from './src/theme'
 import { Loading } from './src/components/Loading'
-import { Routes } from './src/routes'
+import { AppRoutes } from './src/routes/app.routes'
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="trasparent"
-        translucent
-      />
-
-      {fontsLoaded ? <Routes /> : <Loading />}
+      <NavigationContainer>
+        {fontsLoaded ? <AppRoutes /> : <Loading />}
+      </NavigationContainer>
     </NativeBaseProvider>
   )
 }

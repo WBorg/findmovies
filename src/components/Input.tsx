@@ -12,6 +12,7 @@ export function Input({ ...rest }: IInputProps) {
       fontFamily="body"
       mb={4}
       placeholderTextColor="gray.300"
+      placeholder="Digite o nome do filme..."
       flex={1}
       _focus={{
         bg: 'gray.700',

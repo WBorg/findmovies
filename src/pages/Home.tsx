@@ -1,4 +1,6 @@
-import { Center, Text, Button, HStack } from 'native-base'
+import { Center, Text, Button, HStack, Box } from 'native-base'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { Alert } from 'react-native'
 import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
@@ -50,39 +52,47 @@ export function Home() {
       .catch(error => console.error('Erro : ', error))
   }
 
-  useEffect(() => {
-    api
-      .get(`${search}`)
-      .then(response => response.data)
-      .then(data => setMovies(data.results))
-  }, [movies])
+  // useEffect(() => {
+  //   if (search !== '') {
+  //     api
+  //       .get(`${search}`)
+  //       .then(response => response.data)
+  //       .then(data => setMovies(data.results))
+  //   }
+  // }, [movies])
 
   return (
-    <Center flex={1} backgroundColor="gray.700">
-      <Text color="white" fontSize="2xl">
-        Find Movies
-      </Text>
-      <HStack space={1}>
-        <Input onChangeText={setSearch} />
-        <Button
-          onPress={handleFindMovies}
-          h={14}
-          bgColor="green.500"
-          fontFamily="body"
-        >
-          <Text color="white">Pesquisar</Text>
-        </Button>
-      </HStack>
-
-      <FlatList
-        data={movies}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <Card movieProps={item} pressFavorite={() => handleAddMovie(item)} />
-        )}
-        ItemSeparatorComponent={() => <Separator />}
-      />
-    </Center>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Center backgroundColor="gray.700">
+        <Text color="white" fontSize="2xl">
+          Find Movies
+        </Text>
+        <HStack space={1}>
+          <Input onChangeText={setSearch} />
+          <Button
+            onPress={handleFindMovies}
+            h={14}
+            bgColor="green.500"
+            fontFamily="body"
+          >
+            <Text color="white">Pesquisar</Text>
+          </Button>
+        </HStack>
+      </Center>
+      <Box flex={1} backgroundColor="gray.700" w="100%">
+        <FlatList
+          data={movies}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <Card
+              movieProps={item}
+              pressFavorite={() => handleAddMovie(item)}
+            />
+          )}
+          ItemSeparatorComponent={() => <Separator />}
+        />
+      </Box>
+    </SafeAreaView>
   )
 }
