@@ -1,6 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Platform } from 'react-native'
 
+import {useTheme} from 'native-base'
+
 import { Home } from './../pages/Home'
 import { Favorites } from './../pages/Favorites'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -8,12 +10,15 @@ import { MaterialIcons } from '@expo/vector-icons'
 const { Navigator, Screen } = createBottomTabNavigator()
 
 export function AppRoutes() {
+
+  const theme = useTheme()
+
   return (
     <Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: 'green.500',
-        tabBarInactiveTintColor: 'gray.300',
+        tabBarActiveTintColor: theme.colors.green[700],
+        tabBarInactiveTintColor: theme.colors.gray[300],
         tabBarLabelPosition: 'beside-icon',
         tabBarStyle: {
           height: 52,

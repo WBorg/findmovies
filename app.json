@@ -5,6 +5,18 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ff3131"
+      },
+      "package": "findmovies.com"
+    },
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#ff3131",
+      "resizeMode": "cover"
+    }
   }
 }
