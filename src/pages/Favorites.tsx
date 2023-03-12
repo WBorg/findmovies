@@ -30,31 +30,32 @@ export function Favorites() {
       [
         {
           text: 'SIM',
-          onPress: () => handleDeleteAllMovies()
+          onPress: () => handleDeleteAllFavorites()
         },
         {
           text: 'NÃO',
-          onPress: () => console.log(moviesFav)
+          onPress: () => null
         }
       ]
     )
   }
-  function handleDeleteAllMovies() {
-    firestore()
-      .collection('favoritos')
-      .onSnapshot(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => {
-          return {
-            id: doc.id
-          }
-        })
-        setIdsToDelete(data)
-      })
+ async function handleDeleteAllFavorites(){
+     // Referência para a coleção que deseja excluir os documentos
+     const FavoritesRef = firestore().collection('favoritos');
+        
+     // Obter todos os documentos da coleção
+     const querySnapshot = await FavoritesRef.get();
+     
+     // Excluir todos os documentos em lote
+     const batch = firestore().batch();
+     querySnapshot.forEach((doc) => {
+       batch.delete(doc.ref);
+     });
+     await batch.commit();
+    // handleQueryFavoritesMovies()
 
-    idsToDelete.map(item => {
-      firestore().collection('favoritos').doc(item.id).delete()
-    })
-    handleQueryFavoritesMovies()
+
+    
   }
   function handleQueryFavoritesMovies() {
     const subscribe = firestore()
@@ -70,6 +71,7 @@ export function Favorites() {
 
         setDone(true)
       })
+      
     return () => subscribe()
   }
   useEffect(() => {
@@ -83,6 +85,10 @@ export function Favorites() {
     //setDone(false)
     handleQueryFavoritesMovies()
   }, [])
+  // useEffect(() => {
+    
+  //   handleQueryFavoritesMovies()
+  // }, [idsToDelete])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

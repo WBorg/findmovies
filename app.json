@@ -13,10 +13,11 @@
       },
       "package": "findmovies.com"
     },
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "backgroundColor": "#ff3131",
-      "resizeMode": "cover"
+      "resizeMode": "contain"
     },
     "extra": {
       "eas": {
